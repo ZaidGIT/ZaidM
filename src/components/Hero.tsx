@@ -2,6 +2,9 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Code, Database, Brain, Cpu, GitBranch, Layers } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRef } from "react";
+import { SiReact, SiTensorflow, SiNodedotjs, SiBlender } from 'react-icons/si';
+import { LiaPython } from "react-icons/lia";
+import { PiGitlabLogoSimpleBold } from "react-icons/pi";
 
 interface HeroProps {
   darkMode: boolean;
@@ -186,12 +189,12 @@ export function Hero({ darkMode }: HeroProps) {
 
               {/* Orbiting Icons */}
               {[
-                { icon: Code, delay: 0, color: "indigo" },
-                { icon: Brain, delay: 0.5, color: "purple" },
-                { icon: Database, delay: 1, color: "violet" },
-                { icon: Cpu, delay: 1.5, color: "indigo" },
-                { icon: GitBranch, delay: 2, color: "purple" },
-                { icon: Layers, delay: 2.5, color: "violet" },
+                { icon: SiTensorflow, delay: 0, color: "indigo" },
+                { icon: LiaPython, delay: 0.5, color: "purple" },
+                { icon: SiReact, delay: 1, color: "violet" },
+                { icon: SiNodedotjs, delay: 1.5, color: "indigo" },
+                { icon: SiBlender, delay: 2, color: "purple" },
+                { icon: PiGitlabLogoSimpleBold, delay: 2.5, color: "violet" },
               ].map((item, index) => {
                 const angle = (index * 60) * (Math.PI / 180);
                 const radius = 180;

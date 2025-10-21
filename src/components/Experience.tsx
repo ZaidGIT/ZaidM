@@ -126,8 +126,8 @@ export function Experience({ darkMode }: ExperienceProps) {
                       <motion.span
                         className={`px-3 py-1 rounded-full text-xs ${
                           darkMode
-                            ? "bg-white/10 text-gray-300 border border-white/20"
-                            : "bg-black/5 text-gray-700 border border-black/10"
+                            ? "bg-white/10 text-green-300 border border-green-300/20"
+                            : "bg-black/5 text-green-700 border border-green-700/20"
                         }`}
                         animate={{
                           opacity: [1, 0.7, 1],

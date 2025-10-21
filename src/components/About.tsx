@@ -82,6 +82,7 @@ export function About({ darkMode }: AboutProps) {
                 content: ["Bachelor of Artificial Intelligence & Data Science", "Uka Tarsadia University", "2021 – 2025"],
                 delay: 0.3,
                 color: "indigo",
+                link: "https://www.utu.ac.in/",
               },
               {
                 icon: <Brain size={24} />,
@@ -104,6 +105,11 @@ export function About({ darkMode }: AboutProps) {
                 animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
                 transition={{ duration: 0.6, delay: item.delay }}
                 whileHover={{ scale: 1.02, x: 5 }}
+                onClick={() => {
+                  if (item.link) {
+                    window.open(item.link, "_blank");
+                  }
+                }}
                 className={`p-6 rounded-xl border relative overflow-hidden group ${
                   darkMode
                     ? "bg-white/[0.02] border-white/10 hover:border-indigo-500/30"
@@ -111,7 +117,7 @@ export function About({ darkMode }: AboutProps) {
                 } transition-all duration-300`}
               >
                 <motion.div
-                  className={`absolute inset-0 bg-gradient-to-br from-${item.color}-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                  className={`absolute inset-0 bg-linear-to-br from-${item.color}-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
                 />
                 
                 <div className="flex items-start gap-4 relative z-10">
