@@ -1,8 +1,16 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, Code, Database, Brain, Cpu, GitBranch, Layers } from "lucide-react";
+import {
+  ArrowDown,
+  Code,
+  Database,
+  Brain,
+  Cpu,
+  GitBranch,
+  Layers,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { useRef } from "react";
-import { SiReact, SiTensorflow, SiNodedotjs, SiBlender } from 'react-icons/si';
+import { SiReact, SiTensorflow, SiNodedotjs, SiBlender } from "react-icons/si";
 import { LiaPython } from "react-icons/lia";
 import { PiGitlabLogoSimpleBold } from "react-icons/pi";
 
@@ -12,6 +20,8 @@ interface HeroProps {
 
 export function Hero({ darkMode }: HeroProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const lineColor = darkMode ? "rgba(129,140,248,0.3)" : "rgba(79,70,229,0.3)";
+  const nodeColor = darkMode ? "#818CF8" : "#4F46E5";
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -25,7 +35,8 @@ export function Hero({ darkMode }: HeroProps) {
     const element = document.getElementById(id);
     if (element) {
       const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      const elementPosition =
+        element.getBoundingClientRect().top + window.pageYOffset;
       window.scrollTo({
         top: elementPosition - offset,
         behavior: "smooth",
@@ -87,15 +98,174 @@ export function Hero({ darkMode }: HeroProps) {
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <motion.div
-                className={`inline-block mb-6 px-4 py-1.5 rounded-full border backdrop-blur-sm ${
-                  darkMode 
-                    ? "border-indigo-500/20 bg-indigo-500/5 text-indigo-300" 
-                    : "border-indigo-500/20 bg-indigo-500/5 text-indigo-700"
-                }`}
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 300 }}
+                className="relative mb-10 flex justify-center group"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1 }}
               >
-                Available for opportunities
+                {/* Tooltip */}
+                <div className="absolute -top-10 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <div
+                    className={`px-3 py-1 rounded-md shadow-lg text-xs font-medium ${
+                      darkMode
+                        ? "bg-gray-900 text-indigo-200"
+                        : "bg-white text-indigo-700 border border-indigo-100"
+                    }`}
+                  >
+                    Basic Neural Network Model
+                  </div>
+                </div>
+                <svg
+                  width="260"
+                  height="160"
+                  viewBox="0 0 260 160"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {/* animated connections with gradient and pulse */}
+                  {[
+                    // Input to hidden
+                    [40, 40, 100, 60],
+                    [40, 70, 100, 60],
+                    [40, 100, 100, 60],
+                    [40, 40, 100, 100],
+                    [40, 70, 100, 100],
+                    [40, 100, 100, 100],
+                    // Hidden to output
+                    [100, 60, 180, 80],
+                    [100, 100, 180, 80],
+                    // Output to end
+                    [180, 80, 230, 80],
+                  ].map(([x1, y1, x2, y2], i) => (
+                    <motion.line
+                      key={i}
+                      x1={x1}
+                      y1={y1}
+                      x2={x2}
+                      y2={y2}
+                      stroke={`url(#gradient${i})`}
+                      strokeWidth="2"
+                      initial={{ opacity: 0.3, filter: "blur(1px)" }}
+                      animate={{
+                        opacity: [0.3, 1, 0.3],
+                        filter: [
+                          "blur(1px)",
+                          "blur(0.5px) drop-shadow(0 0 6px #818CF8)",
+                          "blur(1px)",
+                        ],
+                      }}
+                      transition={{
+                        duration: 2.2 + i * 0.25,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  ))}
+
+                  {/* gradients for connections */}
+                  {[
+                    [40, 40, 100, 60],
+                    [40, 70, 100, 60],
+                    [40, 100, 100, 60],
+                    [40, 40, 100, 100],
+                    [40, 70, 100, 100],
+                    [40, 100, 100, 100],
+                    [100, 60, 180, 80],
+                    [100, 100, 180, 80],
+                    [180, 80, 230, 80],
+                  ].map(([x1, y1, x2, y2], i) => (
+                    <linearGradient
+                      key={i}
+                      id={`gradient${i}`}
+                      x1={x1}
+                      y1={y1}
+                      x2={x2}
+                      y2={y2}
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop
+                        offset="0%"
+                        stopColor={darkMode ? "#818CF8" : "#4F46E5"}
+                        stopOpacity="0.7"
+                      />
+                      <stop
+                        offset="100%"
+                        stopColor={darkMode ? "#A78BFA" : "#6366F1"}
+                        stopOpacity="0.5"
+                      />
+                    </linearGradient>
+                  ))}
+
+                  {/* animated nodes with glow and pulse */}
+                  {[
+                    // Input layer
+                    [40, 40],
+                    [40, 70],
+                    [40, 100],
+                    // Hidden layer
+                    [100, 60],
+                    [100, 100],
+                    // Output layer
+                    [180, 80],
+                    // End node
+                    [230, 80],
+                  ].map(([cx, cy], i) => (
+                    <motion.circle
+                      key={i}
+                      cx={cx}
+                      cy={cy}
+                      r="7"
+                      fill={nodeColor}
+                      animate={{
+                        scale: [1, 1.5, 1],
+                        opacity: [0.7, 1, 0.7],
+                        filter: [
+                          "drop-shadow(0 0 0 rgba(129,140,248,0))",
+                          `drop-shadow(0 0 12px ${
+                            darkMode ? "#818CF8" : "#4F46E5"
+                          })`,
+                          "drop-shadow(0 0 0 rgba(129,140,248,0))",
+                        ],
+                      }}
+                      transition={{
+                        duration: 2 + (i % 4) * 0.6,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: i * 0.12,
+                      }}
+                    />
+                  ))}
+
+                  {/* animated data flow dots */}
+                  {[
+                    [40, 40, 100, 60],
+                    [40, 70, 100, 60],
+                    [40, 100, 100, 60],
+                    [40, 40, 100, 100],
+                    [40, 70, 100, 100],
+                    [40, 100, 100, 100],
+                    [100, 60, 180, 80],
+                    [100, 100, 180, 80],
+                    [180, 80, 230, 80],
+                  ].map(([x1, y1, x2, y2], i) => (
+                    <motion.circle
+                      key={`dot-${i}`}
+                      r="3"
+                      fill={darkMode ? "#A78BFA" : "#6366F1"}
+                      animate={{
+                        cx: [x1, x2],
+                        cy: [y1, y2],
+                        opacity: [0.2, 1, 0.2],
+                      }}
+                      transition={{
+                        duration: 1.8 + i * 0.2,
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        ease: "easeInOut",
+                        delay: i * 0.18,
+                      }}
+                    />
+                  ))}
+                </svg>
               </motion.div>
 
               <motion.h1
@@ -108,7 +278,9 @@ export function Hero({ darkMode }: HeroProps) {
               </motion.h1>
 
               <motion.h2
-                className={`mb-8 ${darkMode ? "text-gray-400" : "text-gray-600"}`}
+                className={`mb-8 ${
+                  darkMode ? "text-gray-400" : "text-gray-600"
+                }`}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
@@ -117,13 +289,16 @@ export function Hero({ darkMode }: HeroProps) {
               </motion.h2>
 
               <motion.p
-                className={`mb-12 ${darkMode ? "text-gray-500" : "text-gray-600"}`}
+                className={`mb-12 ${
+                  darkMode ? "text-gray-500" : "text-gray-600"
+                }`}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
               >
-                Specializing in Machine Learning, Generative AI, and Full Stack Development.
-                Building intelligent, scalable systems that bridge AI algorithms with robust architectures.
+                Specializing in Machine Learning, Generative AI, and Full Stack
+                Development. Building intelligent, scalable systems that bridge
+                AI algorithms with robust architectures.
               </motion.p>
 
               <motion.div
@@ -132,7 +307,10 @@ export function Hero({ darkMode }: HeroProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1 }}
               >
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   <Button
                     onClick={() => scrollToSection("projects")}
                     className={`rounded-full px-8 ${
@@ -144,7 +322,10 @@ export function Hero({ darkMode }: HeroProps) {
                     View Projects
                   </Button>
                 </motion.div>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   <Button
                     onClick={() => scrollToSection("contact")}
                     variant="outline"
@@ -169,35 +350,110 @@ export function Hero({ darkMode }: HeroProps) {
             transition={{ duration: 1, delay: 0.3 }}
           >
             <div className="relative w-full max-w-lg aspect-square">
-              {/* Central Circle */}
+              {/* Outer Rotating Ring */}
               <motion.div
-                className={`absolute inset-0 rounded-full ${
-                  darkMode 
-                    ? "bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20" 
-                    : "bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20"
-                }`}
-                animate={{
-                  scale: [1, 1.05, 1],
-                  rotate: [0, 5, 0],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
+                className="absolute inset-0"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+              >
+                <svg className="w-full h-full" viewBox="0 0 400 400">
+                  <motion.circle
+                    cx="200"
+                    cy="200"
+                    r="180"
+                    fill="none"
+                    stroke={
+                      darkMode
+                        ? "rgba(99, 102, 241, 0.15)"
+                        : "rgba(99, 102, 241, 0.2)"
+                    }
+                    strokeWidth="1"
+                    strokeDasharray="10 20"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 2, ease: "easeInOut" }}
+                  />
+                </svg>
+              </motion.div>
 
-              {/* Orbiting Icons */}
+              {/* Middle Rotating Ring */}
+              <motion.div
+                className="absolute inset-0"
+                animate={{ rotate: -360 }}
+                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+              >
+                <svg className="w-full h-full" viewBox="0 0 400 400">
+                  <motion.circle
+                    cx="200"
+                    cy="200"
+                    r="140"
+                    fill="none"
+                    stroke={
+                      darkMode
+                        ? "rgba(139, 92, 246, 0.15)"
+                        : "rgba(139, 92, 246, 0.2)"
+                    }
+                    strokeWidth="1"
+                    strokeDasharray="5 15"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 2, delay: 0.2, ease: "easeInOut" }}
+                  />
+                </svg>
+              </motion.div>
+
+              {/* Floating Particles */}
+              {Array.from({ length: 12 }).map((_, index) => {
+                const angle = index * 30 * (Math.PI / 180);
+                const radius = 100 + Math.random() * 80;
+                return (
+                  <motion.div
+                    key={`particle-${index}`}
+                    className="absolute top-1/2 left-1/2"
+                    style={{
+                      x: "-50%",
+                      y: "-50%",
+                    }}
+                    animate={{
+                      x: [
+                        Math.cos(angle) * radius,
+                        Math.cos(angle) * (radius + 20),
+                        Math.cos(angle) * radius,
+                      ],
+                      y: [
+                        Math.sin(angle) * radius,
+                        Math.sin(angle) * (radius + 20),
+                        Math.sin(angle) * radius,
+                      ],
+                      opacity: [0.2, 0.6, 0.2],
+                    }}
+                    transition={{
+                      duration: 3 + Math.random() * 2,
+                      repeat: Infinity,
+                      delay: index * 0.2,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <div
+                      className={`w-1 h-1 rounded-full ${
+                        darkMode ? "bg-indigo-400" : "bg-indigo-500"
+                      }`}
+                    />
+                  </motion.div>
+                );
+              })}
+
+              {/* Tech Icons in Orbit */}
               {[
-                { icon: SiTensorflow, delay: 0, color: "indigo" },
-                { icon: LiaPython, delay: 0.5, color: "purple" },
-                { icon: SiReact, delay: 1, color: "violet" },
-                { icon: SiNodedotjs, delay: 1.5, color: "indigo" },
-                { icon: SiBlender, delay: 2, color: "purple" },
-                { icon: PiGitlabLogoSimpleBold, delay: 2.5, color: "violet" },
+                { icon: SiReact, angle: 0, color: "indigo" },
+                { icon: LiaPython, angle: 60, color: "purple" },
+                { icon: SiTensorflow, angle: 120, color: "violet" },
+                { icon: SiNodedotjs, angle: 180, color: "indigo" },
+                { icon: SiBlender, angle: 240, color: "purple" },
+                { icon: PiGitlabLogoSimpleBold, angle: 300, color: "violet" },
               ].map((item, index) => {
-                const angle = (index * 60) * (Math.PI / 180);
-                const radius = 180;
+                const angleRad = item.angle * (Math.PI / 180);
+                const orbitRadius = 150;
                 return (
                   <motion.div
                     key={index}
@@ -208,53 +464,62 @@ export function Hero({ darkMode }: HeroProps) {
                     }}
                     animate={{
                       x: [
-                        Math.cos(angle) * radius - 24,
-                        Math.cos(angle + Math.PI * 2) * radius - 24,
+                        Math.cos(angleRad) * orbitRadius - 20,
+                        Math.cos(angleRad + Math.PI * 2) * orbitRadius - 20,
                       ],
                       y: [
-                        Math.sin(angle) * radius - 24,
-                        Math.sin(angle + Math.PI * 2) * radius - 24,
+                        Math.sin(angleRad) * orbitRadius - 20,
+                        Math.sin(angleRad + Math.PI * 2) * orbitRadius - 20,
                       ],
                     }}
                     transition={{
-                      duration: 20,
+                      duration: 25,
                       repeat: Infinity,
                       ease: "linear",
-                      delay: item.delay,
+                      delay: index * 0.5,
                     }}
                   >
                     <motion.div
-                      className={`w-12 h-12 rounded-xl ${
+                      className={`w-10 h-10 rounded-lg ${
                         darkMode
-                          ? `bg-${item.color}-500/10 border border-${item.color}-500/30`
-                          : `bg-${item.color}-500/10 border border-${item.color}-500/30`
-                      } backdrop-blur-sm flex items-center justify-center`}
-                      whileHover={{ scale: 1.2, rotate: 10 }}
+                          ? "bg-white/[0.04] border border-white/10"
+                          : "bg-black/[0.04] border border-black/10"
+                      } backdrop-blur-sm flex items-center justify-center shadow-lg`}
+                      whileHover={{
+                        scale: 1.3,
+                        backgroundColor: darkMode
+                          ? "rgba(99, 102, 241, 0.1)"
+                          : "rgba(99, 102, 241, 0.1)",
+                        borderColor: darkMode
+                          ? "rgba(99, 102, 241, 0.3)"
+                          : "rgba(99, 102, 241, 0.3)",
+                      }}
                       animate={{
-                        rotate: [0, 360],
+                        y: [0, -5, 0],
                       }}
                       transition={{
-                        rotate: {
-                          duration: 10,
+                        y: {
+                          duration: 2,
                           repeat: Infinity,
-                          ease: "linear",
+                          ease: "easeInOut",
+                          delay: index * 0.3,
                         },
                       }}
                     >
                       <item.icon
-                        size={24}
-                        className={darkMode ? `text-${item.color}-400` : `text-${item.color}-600`}
+                        size={20}
+                        className={darkMode ? "text-gray-400" : "text-gray-600"}
                       />
                     </motion.div>
                   </motion.div>
                 );
               })}
 
-              {/* Center Core */}
+              {/* Central Geometric Core */}
               <motion.div
                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 animate={{
-                  scale: [1, 1.1, 1],
+                  scale: [1, 1.05, 1],
                 }}
                 transition={{
                   duration: 4,
@@ -262,65 +527,97 @@ export function Hero({ darkMode }: HeroProps) {
                   ease: "easeInOut",
                 }}
               >
-                <div
-                  className={`w-32 h-32 rounded-full ${
-                    darkMode
-                      ? "bg-gradient-to-br from-indigo-600/20 to-purple-600/20 border-2 border-indigo-500/30"
-                      : "bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border-2 border-indigo-500/30"
-                  } backdrop-blur-md flex items-center justify-center`}
+                {/* Outer hexagon */}
+                {/* <motion.div
+                  className="relative"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                 >
-                  <motion.div
-                    className={`text-4xl ${darkMode ? "text-indigo-400" : "text-indigo-600"}`}
-                    animate={{
-                      rotate: [0, 360],
-                    }}
-                    transition={{
-                      duration: 20,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
+                  <svg width="120" height="120" viewBox="0 0 120 120">
+                    <motion.polygon
+                      points="60,10 100,35 100,85 60,110 20,85 20,35"
+                      fill="none"
+                      stroke={darkMode ? "rgba(99, 102, 241, 0.3)" : "rgba(99, 102, 241, 0.4)"}
+                      strokeWidth="1"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{ pathLength: 1, opacity: 1 }}
+                      transition={{ duration: 2, ease: "easeInOut" }}
+                    />
+                  </svg>
+                </motion.div> */}
+
+                {/* Inner circle with gradient */}
+                <motion.div
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                  animate={{ rotate: -360 }}
+                  transition={{
+                    duration: 15,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                >
+                  <div
+                    className={`w-20 h-20 rounded-full ${
+                      darkMode
+                        ? "bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-indigo-500/20"
+                        : "bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-indigo-500/20"
+                    } border ${
+                      darkMode ? "border-indigo-400/30" : "border-indigo-500/30"
+                    } backdrop-blur-md flex items-center justify-center shadow-xl`}
                   >
-                    ⚡
-                  </motion.div>
-                </div>
+                    <motion.div
+                      animate={{
+                        rotate: [0, 180, 360],
+                        scale: [1, 1.1, 1],
+                      }}
+                      transition={{
+                        duration: 8,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      <Code
+                        size={32}
+                        className={
+                          darkMode ? "text-indigo-400" : "text-indigo-600"
+                        }
+                      />
+                    </motion.div>
+                  </div>
+                </motion.div>
               </motion.div>
 
-              {/* Connecting Lines */}
+              {/* Animated connecting beams */}
               <svg className="absolute inset-0 w-full h-full pointer-events-none">
-                <motion.circle
-                  cx="50%"
-                  cy="50%"
-                  r="100"
-                  fill="none"
-                  stroke={darkMode ? "rgba(99, 102, 241, 0.1)" : "rgba(99, 102, 241, 0.15)"}
-                  strokeWidth="1"
-                  strokeDasharray="5,5"
-                  animate={{
-                    strokeDashoffset: [0, -10],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                />
-                <motion.circle
-                  cx="50%"
-                  cy="50%"
-                  r="150"
-                  fill="none"
-                  stroke={darkMode ? "rgba(139, 92, 246, 0.1)" : "rgba(139, 92, 246, 0.15)"}
-                  strokeWidth="1"
-                  strokeDasharray="8,8"
-                  animate={{
-                    strokeDashoffset: [0, 16],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                />
+                {[0, 60, 120, 180, 240, 300].map((angle, index) => {
+                  const rad = angle * (Math.PI / 180);
+                  return (
+                    <motion.line
+                      key={`beam-${index}`}
+                      x1="200"
+                      y1="200"
+                      x2={200 + Math.cos(rad) * 180}
+                      y2={200 + Math.sin(rad) * 180}
+                      stroke={
+                        darkMode
+                          ? "rgba(99, 102, 241, 0.1)"
+                          : "rgba(99, 102, 241, 0.15)"
+                      }
+                      strokeWidth="1"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{
+                        pathLength: [0, 1, 0],
+                        opacity: [0, 0.5, 0],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        delay: index * 0.5,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  );
+                })}
               </svg>
             </div>
           </motion.div>
@@ -331,12 +628,14 @@ export function Hero({ darkMode }: HeroProps) {
         className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, y: [0, 8, 0] }}
-        transition={{ 
+        transition={{
           opacity: { delay: 1.2, duration: 0.6 },
-          y: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+          y: { duration: 2, repeat: Infinity, ease: "easeInOut" },
         }}
       >
-        <span className={`text-xs ${darkMode ? "text-gray-600" : "text-gray-400"}`}>
+        <span
+          className={`text-xs ${darkMode ? "text-gray-600" : "text-gray-400"}`}
+        >
           Scroll to explore
         </span>
         <ArrowDown

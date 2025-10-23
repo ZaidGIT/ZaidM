@@ -12,6 +12,7 @@ interface ExperienceItem {
   period: string;
   description: string[];
   current?: boolean;
+  href?: string;
 }
 
 export function Experience({ darkMode }: ExperienceProps) {
@@ -21,9 +22,10 @@ export function Experience({ darkMode }: ExperienceProps) {
   const experiences: ExperienceItem[] = [
     {
       company: "IT Idol Technologies",
-      role: "Associate SDE",
+      role: "SDE Full Stack",
       period: "Jan 2025 – Present",
       current: true,
+      href: "https://itidoltechnologies.com",
       description: [
         "Developed scalable ed-tech systems using React.js, Node.js, Prisma ORM, and MySQL",
         "Implemented GraphQL APIs for efficient data querying and management",
@@ -35,6 +37,7 @@ export function Experience({ darkMode }: ExperienceProps) {
       company: "1Rivet",
       role: "SDE Intern",
       period: "Apr 2024 – Jul 2024",
+      href: "https://1rivet.com",
       description: [
         "Built full-stack features for web applications using the MERN stack",
         "Worked with Sequelize ORM for database modeling and migrations",
@@ -118,7 +121,7 @@ export function Experience({ darkMode }: ExperienceProps) {
                       <h3 className={`mb-1 ${darkMode ? "text-white" : "text-black"}`}>
                         {exp.role}
                       </h3>
-                      <p className={darkMode ? "text-gray-400" : "text-gray-600"}>
+                      <p onClick={() => window.open(exp.href, "_blank")} className={`${darkMode ? "text-gray-400" : "text-gray-600"} hover:underline cursor-pointer`}>
                         {exp.company}
                       </p>
                     </div>
