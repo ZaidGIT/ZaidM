@@ -16,6 +16,7 @@ interface Project {
   github: string;
   icon: React.ReactNode;
   color: string;
+  href?: string;
 }
 
 export function Projects({ darkMode }: ProjectsProps) {
@@ -68,6 +69,7 @@ export function Projects({ darkMode }: ProjectsProps) {
       github: "https://izaidblog.vercel.app",
       icon: <Type size={32} />,
       color: "purple",
+      href: "https://izaidblog.vercel.app",
     },
     {
       title: "GenAI for beginner programmers",

@@ -18,9 +18,30 @@ interface HeroProps {
   darkMode: boolean;
 }
 
+const neuralConnections = [
+  [40, 40, 100, 60],
+  [40, 70, 100, 60],
+  [40, 100, 100, 60],
+  [40, 40, 100, 100],
+  [40, 70, 100, 100],
+  [40, 100, 100, 100],
+  [100, 60, 180, 80],
+  [100, 100, 180, 80],
+  [180, 80, 230, 80],
+];
+
+const neuralNodes = [
+  [40, 40],
+  [40, 70],
+  [40, 100],
+  [100, 60],
+  [100, 100],
+  [180, 80],
+  [230, 80],
+];
+
 export function Hero({ darkMode }: HeroProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const lineColor = darkMode ? "rgba(129,140,248,0.3)" : "rgba(79,70,229,0.3)";
   const nodeColor = darkMode ? "#818CF8" : "#4F46E5";
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -102,6 +123,7 @@ export function Hero({ darkMode }: HeroProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1 }}
+                whileHover={{ scale: 1.02 }}
               >
                 {/* Tooltip */}
                 <div className="absolute -top-10 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -115,27 +137,48 @@ export function Hero({ darkMode }: HeroProps) {
                     Basic Neural Network Model
                   </div>
                 </div>
-                <svg
+                <motion.svg
                   width="260"
                   height="160"
                   viewBox="0 0 260 160"
                   xmlns="http://www.w3.org/2000/svg"
+                  className="overflow-visible"
+                  aria-label="Animated neural network model"
                 >
-                  {/* animated connections with gradient and pulse */}
-                  {[
-                    // Input to hidden
-                    [40, 40, 100, 60],
-                    [40, 70, 100, 60],
-                    [40, 100, 100, 60],
-                    [40, 40, 100, 100],
-                    [40, 70, 100, 100],
-                    [40, 100, 100, 100],
-                    // Hidden to output
-                    [100, 60, 180, 80],
-                    [100, 100, 180, 80],
-                    // Output to end
-                    [180, 80, 230, 80],
-                  ].map(([x1, y1, x2, y2], i) => (
+                  <defs>
+                    {neuralConnections.map(([x1, y1, x2, y2], i) => (
+                      <linearGradient
+                        key={i}
+                        id={`gradient${i}`}
+                        x1={x1}
+                        y1={y1}
+                        x2={x2}
+                        y2={y2}
+                        gradientUnits="userSpaceOnUse"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor={darkMode ? "#818CF8" : "#4F46E5"}
+                          stopOpacity="0.5"
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor={darkMode ? "#A78BFA" : "#6366F1"}
+                          stopOpacity="0.35"
+                        />
+                      </linearGradient>
+                    ))}
+                    <filter id="nodeGlow" x="-80%" y="-80%" width="260%" height="260%">
+                      <feGaussianBlur stdDeviation="3" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                  </defs>
+
+                  {/* Stable connections */}
+                  {neuralConnections.map(([x1, y1, x2, y2], i) => (
                     <motion.line
                       key={i}
                       x1={x1}
@@ -144,128 +187,112 @@ export function Hero({ darkMode }: HeroProps) {
                       y2={y2}
                       stroke={`url(#gradient${i})`}
                       strokeWidth="2"
-                      initial={{ opacity: 0.3, filter: "blur(1px)" }}
-                      animate={{
-                        opacity: [0.3, 1, 0.3],
-                        filter: [
-                          "blur(1px)",
-                          "blur(0.5px) drop-shadow(0 0 6px #818CF8)",
-                          "blur(1px)",
-                        ],
-                      }}
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{ pathLength: 1, opacity: 0.72 }}
+                      whileHover={{ opacity: 1 }}
                       transition={{
-                        duration: 2.2 + i * 0.25,
-                        repeat: Infinity,
-                        ease: "easeInOut",
+                        pathLength: { duration: 1.1, delay: i * 0.06, ease: "easeOut" },
+                        opacity: { duration: 0.25 },
                       }}
                     />
                   ))}
 
-                  {/* gradients for connections */}
-                  {[
-                    [40, 40, 100, 60],
-                    [40, 70, 100, 60],
-                    [40, 100, 100, 60],
-                    [40, 40, 100, 100],
-                    [40, 70, 100, 100],
-                    [40, 100, 100, 100],
-                    [100, 60, 180, 80],
-                    [100, 100, 180, 80],
-                    [180, 80, 230, 80],
-                  ].map(([x1, y1, x2, y2], i) => (
-                    <linearGradient
+                  {/* Subtle activation paths */}
+                  {[0, 4, 7, 8].map((connectionIndex, i) => {
+                    const [x1, y1, x2, y2] = neuralConnections[connectionIndex];
+                    return (
+                      <motion.line
+                        key={`signal-${connectionIndex}`}
+                        x1={x1}
+                        y1={y1}
+                        x2={x2}
+                        y2={y2}
+                        stroke={darkMode ? "#C4B5FD" : "#4F46E5"}
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        initial={{ pathLength: 0, pathOffset: 0, opacity: 0 }}
+                        animate={{
+                          pathLength: [0, 0.28, 0],
+                          pathOffset: [0, 0.68, 1],
+                          opacity: [0, 0.9, 0],
+                        }}
+                        transition={{
+                          duration: 2.8,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: i * 0.45,
+                        }}
+                      />
+                    );
+                  })}
+
+                  {/* Nodes */}
+                  {neuralNodes.map(([cx, cy], i) => (
+                    <motion.g
                       key={i}
-                      id={`gradient${i}`}
-                      x1={x1}
-                      y1={y1}
-                      x2={x2}
-                      y2={y2}
-                      gradientUnits="userSpaceOnUse"
+                      initial={{ opacity: 0, scale: 0.85 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      whileHover={{ scale: 1.18 }}
+                      transition={{ duration: 0.35, delay: i * 0.06 }}
+                      style={{ transformOrigin: `${cx}px ${cy}px` }}
                     >
-                      <stop
-                        offset="0%"
-                        stopColor={darkMode ? "#818CF8" : "#4F46E5"}
-                        stopOpacity="0.7"
+                      <motion.circle
+                        cx={cx}
+                        cy={cy}
+                        r="10"
+                        fill={darkMode ? "rgba(129,140,248,0.12)" : "rgba(79,70,229,0.1)"}
+                        animate={{
+                          scale: [1, 1.18, 1],
+                          opacity: [0.45, 0.8, 0.45],
+                        }}
+                        transition={{
+                          duration: 3.2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: i * 0.14,
+                        }}
                       />
-                      <stop
-                        offset="100%"
-                        stopColor={darkMode ? "#A78BFA" : "#6366F1"}
-                        stopOpacity="0.5"
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r="5.5"
+                        fill={nodeColor}
+                        filter="url(#nodeGlow)"
                       />
-                    </linearGradient>
-                  ))}
-
-                  {/* animated nodes with glow and pulse */}
-                  {[
-                    // Input layer
-                    [40, 40],
-                    [40, 70],
-                    [40, 100],
-                    // Hidden layer
-                    [100, 60],
-                    [100, 100],
-                    // Output layer
-                    [180, 80],
-                    // End node
-                    [230, 80],
-                  ].map(([cx, cy], i) => (
-                    <motion.circle
-                      key={i}
-                      cx={cx}
-                      cy={cy}
-                      r="7"
-                      fill={nodeColor}
-                      animate={{
-                        scale: [1, 1.5, 1],
-                        opacity: [0.7, 1, 0.7],
-                        filter: [
-                          "drop-shadow(0 0 0 rgba(129,140,248,0))",
-                          `drop-shadow(0 0 12px ${
-                            darkMode ? "#818CF8" : "#4F46E5"
-                          })`,
-                          "drop-shadow(0 0 0 rgba(129,140,248,0))",
-                        ],
-                      }}
-                      transition={{
-                        duration: 2 + (i % 4) * 0.6,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: i * 0.12,
-                      }}
-                    />
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r="2"
+                        fill={darkMode ? "#EEF2FF" : "#FFFFFF"}
+                        opacity="0.85"
+                      />
+                    </motion.g>
                   ))}
 
                   {/* animated data flow dots */}
-                  {[
-                    [40, 40, 100, 60],
-                    [40, 70, 100, 60],
-                    [40, 100, 100, 60],
-                    [40, 40, 100, 100],
-                    [40, 70, 100, 100],
-                    [40, 100, 100, 100],
-                    [100, 60, 180, 80],
-                    [100, 100, 180, 80],
-                    [180, 80, 230, 80],
-                  ].map(([x1, y1, x2, y2], i) => (
-                    <motion.circle
-                      key={`dot-${i}`}
-                      r="3"
-                      fill={darkMode ? "#A78BFA" : "#6366F1"}
-                      animate={{
-                        cx: [x1, x2],
-                        cy: [y1, y2],
-                        opacity: [0.2, 1, 0.2],
-                      }}
-                      transition={{
-                        duration: 1.8 + i * 0.2,
-                        repeat: Infinity,
-                        repeatType: "loop",
-                        ease: "easeInOut",
-                        delay: i * 0.18,
-                      }}
-                    />
-                  ))}
-                </svg>
+                  {[0, 3, 6, 8].map((connectionIndex, i) => {
+                    const [x1, y1, x2, y2] = neuralConnections[connectionIndex];
+                    return (
+                      <motion.circle
+                        key={`dot-${connectionIndex}`}
+                        r="2.4"
+                        fill={darkMode ? "#E0E7FF" : "#4F46E5"}
+                        animate={{
+                          cx: [x1, x2],
+                          cy: [y1, y2],
+                          opacity: [0, 0.9, 0],
+                        }}
+                        transition={{
+                          duration: 2.4,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: i * 0.55,
+                        }}
+                      />
+                    );
+                  })}
+                </motion.svg>
               </motion.div>
 
               <motion.h1
