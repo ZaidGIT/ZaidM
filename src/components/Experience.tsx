@@ -23,8 +23,7 @@ export function Experience({ darkMode }: ExperienceProps) {
     {
       company: "IT Idol Technologies",
       role: "SDE Full Stack",
-      period: "Jan 2025 – Present",
-      current: true,
+      period: "Jan 2025 – Dec 2025",
       href: "https://itidoltechnologies.com",
       description: [
         "Developed scalable ed-tech systems using React.js, Node.js, Prisma ORM, and MySQL",

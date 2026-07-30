@@ -127,7 +127,7 @@ export function Hero({ darkMode }: HeroProps) {
               >
                 {/* Tooltip */}
                 <div className="absolute -top-10 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <div
+                  {/* <div
                     className={`px-3 py-1 rounded-md shadow-lg text-xs font-medium ${
                       darkMode
                         ? "bg-gray-900 text-indigo-200"
@@ -135,7 +135,7 @@ export function Hero({ darkMode }: HeroProps) {
                     }`}
                   >
                     Basic Neural Network Model
-                  </div>
+                  </div> */}
                 </div>
                 <motion.svg
                   width="260"
